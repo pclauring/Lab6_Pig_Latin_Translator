@@ -16,7 +16,9 @@ namespace Lab6_Pig_Latin_Translation
 
                 string word = Console.ReadLine().ToLower().Trim();
 
-                if (!string.IsNullOrEmpty(word))
+                string finalTranslation = null; //final translation declared to be filled with words
+
+                if (!string.IsNullOrEmpty(word))  // test for empty input
                 {
                     string[] wordsSplit = word.Split(' ');
 
@@ -31,27 +33,29 @@ namespace Lab6_Pig_Latin_Translation
 
                         bool containsPunctuation = translation.LastIndexOfAny(punctuation) >= 0;
 
+                        int firstVowel = FindFirstVowel(translation);
+
                         if (!containsPunctuation)
                         {
-
-                            int firstVowel = FindFirstVowel(translation);
                             if (firstVowel == 0 || firstVowel == -1)
                             {
                                 translation += "way ";
-                                Console.Write(translation);
+                                finalTranslation += translation;
+
                             }
                             else
                             {
                                 //swapping leading consonants onto the back
-                                string swapTranslation = translation.Substring(firstVowel) + translation.ToLower().Substring(0, firstVowel) + "ay ";
+                                translation = translation.Substring(firstVowel) + translation.ToLower().Substring(0, firstVowel) + "ay ";
 
-                                Console.Write(swapTranslation);
+                                finalTranslation += translation;
                             }
                         }
                         else
-                            Console.WriteLine(translation); //writes words with nums & symbols that shouldn't be translated
+                            finalTranslation += translation;
+                        //writes words with nums & symbols that don't need translating
                     }
-                    Console.WriteLine();
+                    Console.WriteLine(finalTranslation);
                 }
                 else
                 {
