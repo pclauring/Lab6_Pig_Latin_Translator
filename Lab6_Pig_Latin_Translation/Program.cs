@@ -7,38 +7,76 @@ namespace Lab6_Pig_Latin_Translation
         static void Main(string[] args)
         {
             //Prompt the user for a word
-            Console.WriteLine("||Welcome to the Pig Latin Translator!||\n\nPlease enter a word to translate into Pig Latin: ");
+            Console.WriteLine("||Welcome to the Pig Latin Translator!||");
+            do
+            {
+                Console.WriteLine("\nPlease enter a word or phrase to translate into Pig Latin:\n");
 
-            string word = Console.ReadLine().Trim();
+                // trim the extra spaces and split the word into substrings from the ' ' char
 
+                string word = Console.ReadLine().ToLower().Trim();
+
+                if (!string.IsNullOrEmpty(word))
+                {
+                    string[] wordsSplit = word.Split(' ');
+
+                    Console.WriteLine("\nTranslating...\n");
+
+                    for (int i = 0; i < wordsSplit.Length; i++)
+                    {
+                        string translation = wordsSplit[i];
+
+                        //find if it contains numbers or punctuation
+                        char[] punctuation = "123456789!@#$%^&*()_+".ToCharArray();
+
+                        bool containsPunctuation = translation.LastIndexOfAny(punctuation) >= 0;
+
+                        if (!containsPunctuation)
+                        {
+
+                            int firstVowel = FindFirstVowel(translation);
+                            if (firstVowel == 0 || firstVowel == -1)
+                            {
+                                translation += "way ";
+                                Console.Write(translation);
+                            }
+                            else
+                            {
+                                //swapping leading consonants onto the back
+                                string swapTranslation = translation.Substring(firstVowel) + translation.ToLower().Substring(0, firstVowel) + "ay ";
+
+                                Console.Write(swapTranslation);
+                            }
+                        }
+                        else
+                            Console.WriteLine(translation); //writes words with nums & symbols that shouldn't be translated
+                    }
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine("You didn't enter a word to translate...");
+                }
+                Console.WriteLine("\nWould you like to try to translate another word or phrase (Y/N)?");
+
+                // ask if they want to run again
+            } while (Console.ReadLine().ToLower()[0] == 'y');
+        }
+
+        private static int FindFirstVowel(string word)
+        {
             int vowelPosition = -1;
             for (int i = 0; i < word.Length && vowelPosition < 0; i++)
             {
-                char vowel = word.ToLower()[i];
+                char vowel = word[i];
+
                 if (vowel == 'a' || vowel == 'e' || vowel == 'o' || vowel == 'u' || vowel == 'i')
                 {
                     vowelPosition = i;
                 }
             }
-            Console.WriteLine(vowelPosition);
 
-            //assignment of way in case of a leading vowel
-            if (vowelPosition == 0)
-            {
-                word += "way";
-                Console.WriteLine(word);
-            }
-            else
-            {
-                //swapping leading consonants onto the back
-                string wordSwap = word.Substring(vowelPosition) + word.ToLower().Substring(0, vowelPosition) + "ay"; 
-
-                Console.WriteLine(wordSwap);
-            }
-            //Display Pig Latin into the console
-            //Find the first vowel
-            //if vowel is in first position add "way" to ending
-            //move all consonants that appear before the first vowel to the end of the word
+            return vowelPosition;
         }
     }
 }
